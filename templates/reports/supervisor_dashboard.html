@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-5xl mx-auto mt-12">
+
+    <h2 class="text-2xl font-bold mb-6 text-center">Supervisor Dashboard</h2>
+
+    <!-- Filters (optional, simple example) -->
+    <div class="flex justify-end mb-4 space-x-2">
+        <a href="?risk=High" class="px-3 py-1 bg-red-200 text-red-800 rounded-full text-sm font-semibold hover:bg-red-300 transition">
+            High
+        </a>
+        <a href="?risk=Medium" class="px-3 py-1 bg-yellow-200 text-yellow-800 rounded-full text-sm font-semibold hover:bg-yellow-300 transition">
+            Medium
+        </a>
+        <a href="?risk=Low" class="px-3 py-1 bg-green-200 text-green-800 rounded-full text-sm font-semibold hover:bg-green-300 transition">
+            Low
+        </a>
+        <a href="/reports/dashboard/" class="px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-sm font-semibold hover:bg-gray-300 transition">
+            All
+        </a>
+    </div>
+
+    <!-- Reports Table -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded-xl shadow divide-y divide-gray-200">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Location</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Reported By</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Risk Level</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tolerability</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for report in reports %}
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-4">{{ report.location }}</td>
+                    <td class="px-6 py-4">{{ report.reporter.username }}</td>
+                    <td class="px-6 py-4">{{ report.created_at|date:"M d, Y H:i" }}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded-full text-sm font-semibold
+                            {% if report.risk_level == 'High' %} bg-red-200 text-red-800
+                            {% elif report.risk_level == 'Medium' %} bg-yellow-200 text-yellow-800
+                            {% else %} bg-green-200 text-green-800 {% endif %}
+                        ">
+                            {{ report.risk_level }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">{{ report.risk_tolerability }}</td>
+                    <td class="px-6 py-4">
+                        <a href="{% url 'review_reports' report.id %}" class="text-blue-600 hover:underline">Pending Review</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                        No hazard reports submitted yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

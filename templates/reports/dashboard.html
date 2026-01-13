@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="text-2xl font-bold mb-6 text-gray-800">Supervisor Dashboard</h2>
+
+<table class="w-full bg-white shadow rounded-xl overflow-hidden">
+    <thead class="bg-gray-200">
+        <tr>
+            <th class="p-3 text-left">Date</th>
+            <th class="p-3 text-left">Location</th>
+            <th class="p-3 text-left">Risk</th>
+            <th class="p-3 text-left">Status</th>
+            <th class="p-3 text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for report in reports %}
+        <tr class="border-t hover:bg-gray-50">
+            <td class="p-3">{{ report.date|date:"M d, Y" }}</td>
+            <td class="p-3">{{ report.location }}</td>
+            <td class="p-3 font-bold
+                {% if report.risk_level == 'High' %} text-red-600
+                {% elif report.risk_level == 'Medium' %} text-yellow-600
+                {% else %} text-green-600 {% endif %}">
+                {{ report.risk_level }}
+            </td>
+            <td class="p-3">
+                {% if report.reviewed_by %}
+                    <span class="text-gray-500 font-medium">Reviewed</span>
+                {% else %}
+                    <span class="text-orange-600 font-medium">Pending</span>
+                {% endif %}
+            </td>
+            <td class="p-3">
+                {% if report.reviewed_by %}
+                    <span class="text-gray-500 font-medium">Reviewed</span>
+                {% else %}
+                    <span class="text-orange-600 font-medium">Pending</span>
+                {% endif %}
+            </td>
+            <td class="p-3 text-center">
+                {% if not report.reviewed_by %}
+                    <a href="{% url 'review_report' report.id %}" 
+                       class="text-blue-600 font-medium hover:underline">
+                       Review
+                    </a>
+                {% else %}
+                    <span class="text-gray-400 font-medium">—</span>
+                {% endif %}
+            </td>
+
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="p-3 text-center text-gray-500">No reports found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

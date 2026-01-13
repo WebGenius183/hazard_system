@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto mt-12">
+
+    <h2 class="text-2xl font-bold mb-6 text-center">My Hazard Reports</h2>
+
+    <div class="grid gap-4">
+        {% for report in reports %}
+        <div class="bg-white p-4 rounded-xl shadow flex justify-between items-center hover:shadow-lg transition">
+            <div>
+                <p class="font-semibold">{{ report.location }}</p>
+                <p class="text-sm text-gray-500">{{ report.created_at|date:"M d, Y H:i" }}</p>
+            </div>
+
+            <span class="px-3 py-1 rounded-full text-sm font-semibold
+                {% if report.risk_level == 'High' %} bg-red-200 text-red-800
+                {% elif report.risk_level == 'Medium' %} bg-yellow-200 text-yellow-800
+                {% else %} bg-green-200 text-green-800 {% endif %}
+            ">
+                {{ report.risk_level }}
+            </span>
+        </div>
+        {% empty %}
+        <div class="bg-white p-6 rounded-xl shadow text-center">
+            <p class="text-gray-600">You haven’t submitted any hazard reports yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

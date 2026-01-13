@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow mt-12">
+
+    <h2 class="text-2xl font-bold mb-6 text-center">New Hazard Report</h2>
+
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+
+        <!-- Hazard Details -->
+        <div>
+            {{ form.date.label_tag }} {{ form.date }}
+        </div>
+        <div>
+            {{ form.time.label_tag }} {{ form.time }}
+        </div>
+        <div>
+            {{ form.location.label_tag }} {{ form.location }}
+        </div>
+        <div>
+            {{ form.description.label_tag }} {{ form.description }}
+        </div>
+
+        <!-- Risk Assessment -->
+        <div class="flex space-x-4">
+            <div>
+                {{ form.severity.label_tag }} {{ form.severity }}
+            </div>
+            <div>
+                {{ form.probability.label_tag }} {{ form.probability }}
+            </div>
+        </div>
+
+        <!-- Reporter Info -->
+        <div>
+            {{ form.reporter_name.label_tag }} {{ form.reporter_name }}
+        </div>
+        <div>
+            {{ form.contact_info.label_tag }} {{ form.contact_info }}
+        </div>
+
+        <!-- Actions Taken -->
+        <div>
+            {{ form.immediate_actions.label_tag }} {{ form.immediate_actions }}
+        </div>
+        <div>
+            {{ form.recommended_actions.label_tag }} {{ form.recommended_actions }}
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg transition">
+            Submit Report
+        </button>
+    </form>
+
+    <!-- Live Risk Preview -->
+    <div class="mt-6 p-4 bg-gray-50 rounded-xl shadow">
+        <h3 class="font-semibold mb-2">Live Risk Preview</h3>
+        <p>Risk Level: <span id="risk-level" class="font-bold">-</span></p>
+        <p>Tolerability: <span id="risk-tolerability" class="font-bold">-</span></p>
+    </div>
+
+</div>
+
+<script>
+// ICAO Risk Matrix
+const riskMatrix = {
+    'A': {5: 'High', 4: 'High', 3: 'High', 2: 'Medium', 1: 'Low'},
+    'B': {5: 'High', 4: 'High', 3: 'Medium', 2: 'Medium', 1: 'Low'},
+    'C': {5: 'High', 4: 'Medium', 3: 'Medium', 2: 'Low', 1: 'Low'},
+    'D': {5: 'Medium', 4: 'Medium', 3: 'Low', 2: 'Low', 1: 'Low'},
+    'E': {5: 'Low', 4: 'Low', 3: 'Low', 2: 'Low', 1: 'Low'}
+};
+
+const tolerability = {
+    'High': 'Unacceptable',
+    'Medium': 'Tolerable with mitigation',
+    'Low': 'Acceptable with monitoring'
+};
+
+// Elements
+const severitySelect = document.getElementById('id_severity');
+const probabilitySelect = document.getElementById('id_probability');
+const riskLevelEl = document.getElementById('risk-level');
+const tolerabilityEl = document.getElementById('risk-tolerability');
+
+// Function to update risk
+function updateRisk() {
+    const severity = severitySelect.value;
+    const probability = parseInt(probabilitySelect.value);
+
+    if (severity && probability) {
+        const risk = riskMatrix[severity][probability];
+        riskLevelEl.textContent = risk;
+        tolerabilityEl.textContent = tolerability[risk];
+
+        // Color coding
+        if (risk === 'High') {
+            riskLevelEl.className = 'font-bold text-red-600';
+            tolerabilityEl.className = 'font-bold text-red-600';
+        } else if (risk === 'Medium') {
+            riskLevelEl.className = 'font-bold text-yellow-600';
+            tolerabilityEl.className = 'font-bold text-yellow-600';
+        } else {
+            riskLevelEl.className = 'font-bold text-green-600';
+            tolerabilityEl.className = 'font-bold text-green-600';
+        }
+    } else {
+        riskLevelEl.textContent = '-';
+        tolerabilityEl.textContent = '-';
+    }
+}
+
+// Event listeners
+severitySelect.addEventListener('change', updateRisk);
+probabilitySelect.addEventListener('change', updateRisk);
+</script>
+
+{% endblock %}
