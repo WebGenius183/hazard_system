@@ -25,13 +25,13 @@ SECRET_KEY = 'django-insecure-)2b59dxbst8+_#^=_*a-w09k0)dnjsb+r84baohdab%6um8!dq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    #'jazzmin',
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -74,6 +74,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'hazard_system.wsgi.application'
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
