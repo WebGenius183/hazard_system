@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-)2b59dxbst8+_#^=_*a-w09k0)dnjsb+r84baohdab%6um8!dq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://hazardsystem.pxxl.click/','www.hazardsystem.pxxl.click','hazardsystem.pxxl.click']
 
 
 # Application definition
